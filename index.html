@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WedInk - Create Beautiful Wedding & Event Invitations</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=ballet:400" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>WedInk</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="creator">Create</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="print-locations">Print Locations</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="templates">Templates</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="about">About Us</a>
+                </li>
+            </ul>
+            <div class="nav-auth">
+                <button class="auth-btn" data-page="login" id="loginBtn">Login</button>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <span class="user-name" id="userName">Welcome, User!</span>
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Container -->
+    <div class="page-container">
+        
+        <!-- Creator Page -->
+        <div class="page active" id="creator-page">
+            <div class="container">
+                <header class="page-header">
+                    <h1>Create Your Invitation</h1>
+                    <p>Design beautiful invitations for your special moments</p>
+                </header>
+
+                <main>
+                    <div class="creator-section">
+                        <div class="form-container">
+                            <h2>Design Your Invitation</h2>
+                            
+                            <form id="invitationForm">
+                                <div class="form-group">
+                                    <label for="invitationType">Invitation Type:</label>
+                                    <select id="invitationType" name="invitationType">
+                                        <option value="wedding">Wedding</option>
+                                        <option value="birthday">Birthday Party</option>
+                                        <option value="anniversary">Anniversary</option>
+                                        <option value="baby-shower">Baby Shower</option>
+                                        <option value="graduation">Graduation</option>
+                                        <option value="engagement">Engagement</option>
+                                        <option value="other">Other Event</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="eventTitle">Event Title:</label>
+                                    <input type="text" id="eventTitle" name="eventTitle" placeholder="e.g., Wedding Celebration">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="hostNames">Host Names:</label>
+                                    <input type="text" id="hostNames" name="hostNames" placeholder="e.g., Sarah & Michael">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="eventDate">Event Date:</label>
+                                    <input type="date" id="eventDate" name="eventDate">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="eventTime">Event Time:</label>
+                                    <input type="time" id="eventTime" name="eventTime">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="venue">Venue:</label>
+                                    <input type="text" id="venue" name="venue" placeholder="e.g., Garden Rose Chapel">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address">Address:</label>
+                                    <textarea id="address" name="address" rows="3" placeholder="123 Main Street, City, State 12345"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rsvpInfo">RSVP Information:</label>
+                                    <textarea id="rsvpInfo" name="rsvpInfo" rows="2" placeholder="Please RSVP by [date] to [contact info]"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="additionalInfo">Additional Information:</label>
+                                    <textarea id="additionalInfo" name="additionalInfo" rows="3" placeholder="Dress code, special instructions, etc."></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="specialMessage">Special Message:</label>
+                                    <textarea id="specialMessage" name="specialMessage" rows="2" placeholder="A personal message or quote"></textarea>
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="button" id="previewBtn">Preview Invitation</button>
+                                    <button type="button" id="resetBtn">Reset Form</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="preview-container">
+                            <h2>Preview</h2>
+                            <div id="invitationPreview" class="invitation-card">
+                                <div class="invitation-content">
+                                    <div class="invitation-header">
+                                        <h3 id="previewTitle">Your Beautiful Invitation</h3>
+                                    </div>
+                                    
+                                    <div class="invitation-body">
+                                        <div class="host-names" id="previewHosts">Host Names</div>
+                                        
+                                        <div class="event-details">
+                                            <div class="date-time">
+                                                <span id="previewDate">Date</span>
+                                                <span id="previewTime">Time</span>
+                                            </div>
+                                            
+                                            <div class="venue-info">
+                                                <div id="previewVenue">Venue</div>
+                                                <div id="previewAddress">Address</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="special-message" id="previewMessage"></div>
+                                        
+                                        <div class="rsvp-info" id="previewRSVP"></div>
+                                        
+                                        <div class="additional-info" id="previewAdditional"></div>
+                                    </div>
+                                    
+                                    <div class="invitation-footer">
+                                        <div class="decorative-element">❦</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button type="button" id="printBtn">Print Invitation</button>
+                                <button type="button" id="downloadBtn">Download as Image</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Print Locations Page -->
+        <div class="page" id="print-locations-page">
+            <div class="container">
+                <header class="page-header">
+                    <h1>Find Print Locations</h1>
+                    <p>Locate nearby printing services for your invitations</p>
+                </header>
+
+                <div class="print-locations-content">
+                    <div class="search-section">
+                        <div class="search-container">
+                            <input type="text" id="locationSearch" placeholder="Enter your address or zip code">
+                            <button id="searchBtn">Search</button>
+                        </div>
+                        <div class="filter-options">
+                            <label>
+                                <input type="checkbox" id="filter24h" checked> 24 Hour Service
+                            </label>
+                            <label>
+                                <input type="checkbox" id="filterColor" checked> Color Printing
+                            </label>
+                            <label>
+                                <input type="checkbox" id="filterPremium" checked> Premium Paper
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="map-results-container">
+                        <div class="map-container">
+                            <div id="map"></div>
+                        </div>
+                        
+                        <div class="results-container">
+                            <h3>Nearby Print Locations</h3>
+                            <div id="printLocationsList">
+                                <!-- Print locations will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Page -->
+        <div class="page" id="templates-page">
+            <div class="container">
+                <header class="page-header">
+                    <h1>Invitation Templates</h1>
+                    <p>Choose from our collection of beautiful pre-designed templates</p>
+                </header>
+
+                <div class="templates-content">
+                    <div class="template-filters">
+                        <button class="filter-btn active" data-category="all">All Templates</button>
+                        <button class="filter-btn" data-category="wedding">Wedding</button>
+                        <button class="filter-btn" data-category="birthday">Birthday</button>
+                        <button class="filter-btn" data-category="anniversary">Anniversary</button>
+                        <button class="filter-btn" data-category="baby-shower">Baby Shower</button>
+                        <button class="filter-btn" data-category="other">Other Events</button>
+                    </div>
+
+                    <div class="templates-grid" id="templatesGrid">
+                        <!-- Templates will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us Page -->
+        <div class="page" id="about-page">
+            <div class="container">
+                <header class="page-header">
+                    <h1>About WedInk</h1>
+                    <p>Creating memorable moments through beautiful design</p>
+                </header>
+
+                <div class="about-content">
+                    <section class="about-section">
+                        <h2>Our Story</h2>
+                        <p>At WedInk, we believe that every special moment deserves a beautiful beginning. Founded with a passion for design and celebration, we've dedicated ourselves to helping you create the perfect invitations for life's most precious occasions.</p>
+                        
+                        <p>Whether you're planning a wedding, celebrating a milestone birthday, or hosting any special event, our intuitive design tools and elegant templates make it easy to create invitations that reflect your unique style and personality.</p>
+                    </section>
+
+                    <section class="features-section">
+                        <h2>Why Choose Us?</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <h3>Easy to Use</h3>
+                                <p>Our intuitive interface makes designing beautiful invitations simple and enjoyable.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Professional Quality</h3>
+                                <p>High-quality designs that look professionally crafted for your special occasions.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Print Anywhere</h3>
+                                <p>Find local printing services or download high-resolution files for home printing.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Multiple Templates</h3>
+                                <p>Choose from a variety of elegant templates or create your own custom design.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="contact-section">
+                        <h2>Contact Us</h2>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <h4>Email</h4>
+                                <p>hello@wedink.com</p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>Phone</h4>
+                                <p>(555) 123-4567</p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>Address</h4>
+                                <p>123 Design Street<br>Creative City, CC 12345</p>
+                            </div>
+                        </div>
+
+                        <form class="contact-form">
+                            <h3>Send us a Message</h3>
+                            <div class="form-group">
+                                <input type="text" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" placeholder="Your Email" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Your Message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit">Send Message</button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div class="page" id="login-page">
+            <div class="container">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2 id="authTitle">Welcome Back</h2>
+                        <p id="authSubtitle">Sign in to your account</p>
+
+                        <form id="authForm">
+                            <div class="form-group">
+                                <input type="email" id="authEmail" placeholder="Email Address" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="authPassword" placeholder="Password" required>
+                            </div>
+                            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                                <input type="password" id="authConfirmPassword" placeholder="Confirm Password">
+                            </div>
+                            <div class="form-group" id="nameGroup" style="display: none;">
+                                <input type="text" id="authName" placeholder="Full Name">
+                            </div>
+                            
+                            <button type="submit" id="authSubmitBtn">Sign In</button>
+                        </form>
+
+                        <div class="auth-switch">
+                            <p id="authSwitchText">Don't have an account? <a href="#" id="authSwitchLink">Sign up</a></p>
+                        </div>
+
+                        <div class="auth-divider">
+                            <span>or</span>
+                        </div>
+
+                        <div class="social-auth">
+                            <button class="social-btn google-btn">Continue with Google</button>
+                            <button class="social-btn facebook-btn">Continue with Facebook</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
